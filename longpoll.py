@@ -33,7 +33,8 @@ def get_redis():
 
 def get_password_from_redis(user_id: int) -> str:
     r = get_redis()
-    return r.get(user_id)
+    rv = r.get(user_id)
+    return (rv or b'').decode('utf-8')
 
 
 def set_password_for_user(user_id: int, password: str) -> bool:
