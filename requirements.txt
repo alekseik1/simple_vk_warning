@@ -1,0 +1,3 @@
+dotenv
+loguru
+vk_api
