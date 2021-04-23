@@ -41,7 +41,7 @@ def handle_message(event):
     logger.info("new message")
     message_text, message_id = event.obj.text, event.obj.id
     user_id = int(event.obj.message['from_id'])
-    send_message(user_id, get_password_from_redis(user_id))
+    send_message(user_id, get_password_from_redis(user_id) or 'Не найден пароль')
 
 
 def main():
