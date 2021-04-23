@@ -1,3 +1,4 @@
 python-dotenv
 loguru
 vk_api
+redis
