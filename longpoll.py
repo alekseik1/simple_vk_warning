@@ -22,9 +22,13 @@ ADMIN_ID = "92540660"
 def send_message(to_id, message: str) -> None:
     vk.messages.send(peer_id=to_id, random_id=get_random_id(), message=message)
 
+_redis = None
 
 def get_redis():
-    return redis.from_url(os.environ.get('REDISTOGO_URL'))
+    global _redis
+    if _redis is None:
+        _redis = redis.from_url(os.environ.get('REDISTOGO_URL'))
+    return _redis
 
 
 def get_password_from_redis(user_id: int) -> str:
@@ -41,7 +45,7 @@ def handle_message(event):
     logger.info("new message")
     message_text, message_id = event.obj.text, event.obj.id
     user_id = int(event.obj.message['from_id'])
-    send_message(user_id, get_password_from_redis(user_id) or 'Не найден пароль')
+    send_message(user_id, 'Логин: {}\nПароль: {}'.format(user_id, get_password_from_redis(user_id) or 'Не найден пароль'))
 
 
 def main():
@@ -52,6 +56,14 @@ def main():
 
 
 if __name__ == "__main__":
+    """
+    import json
+    with open('passwords.json', 'r') as f:
+        passwords = json.load(f)
+        for vk_id, password in passwords.items():
+            set_password_for_user(vk_id, password)
+    exit(0)
+    """
     while True:
         try:
             main()
