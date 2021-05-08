@@ -3,5 +3,5 @@ aiohttp
 python-dotenv
 loguru
 vk_api
-https://github.com/timoniq/vkbottle/archive/master.zip
+https://github.com/timoniq/vkbottle/archive/fba8eaf4d2cc1333642766ae70b94980e41ccec3.zip
 redis
