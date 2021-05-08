@@ -1,1 +1,1 @@
-bot: python src/bot.py
+bot: cd src && python bot.py
