@@ -1,1 +1,1 @@
-bot: python longpoll.py
+bot: python src/bot.py
