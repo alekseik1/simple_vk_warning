@@ -1,4 +1,6 @@
+aioredis
 python-dotenv
 loguru
 vk_api
+https://github.com/timoniq/vkbottle/archive/master.zip
 redis
