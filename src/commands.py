@@ -25,5 +25,11 @@ class AdminOpenLock(CommandBase):
     button_name = 'Открыть 5Б'
     description = '(ТОЛЬКО АДМИНАМ) Открыть замок 5Б'
 
+class AdminCloseLock(CommandBase):
+    key = 'close_lock_5b'
+    raw_message_name = 'закрыть_5Б'
+    button_name = 'Закрыть 5Б'
+    description = '(ТОЛЬКО АДМИНАМ) Закрыть замок 5Б'
 
-available_commands = [AdminOpenLock, HelpCommand, GetPasswordCommand]
+
+available_commands = [AdminOpenLock, AdminCloseLock, HelpCommand, GetPasswordCommand]
