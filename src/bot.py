@@ -16,8 +16,16 @@ logger.remove()
 logger.add(sys.stderr, level="DEBUG")
 
 
+bp_default = None
 for bp in load_blueprints_from_package('blueprints'):
-    bp.load(bot)
+    if not bp.name == 'default':
+        bp.load(bot)
+    else:
+        bp_default = bp
+else:
+    if bp_default:
+        bp_default.load(bot)
+
 
 bot.labeler.message_view.register_middleware(RedisMiddleware)
 bot.run_forever()
