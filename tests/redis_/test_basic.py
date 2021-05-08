@@ -1,14 +1,16 @@
+import os
+
 import pytest
-import fakeredis.aioredis
 import aioredis
-from pytest_mock import MockFixture
 from unittest.mock import AsyncMock
+from pytest_mock import MockFixture
 from typing import Tuple, List
 
-from src.redis_.crud import set_password_for_user, get_password_from_redis
+from src.redis_.crud import set_password_for_user, get_password_from_redis, get_redis
 
 
 @pytest.mark.good_input
+@pytest.mark.unit
 @pytest.mark.asyncio
 async def test_get_password_from_filled_redis_gives_correct_data(
         fake_credentials: List[Tuple[int, str]], redis_filled: aioredis.Redis):
@@ -20,6 +22,7 @@ async def test_get_password_from_filled_redis_gives_correct_data(
 
 
 @pytest.mark.good_input
+@pytest.mark.unit
 @pytest.mark.asyncio
 async def test_set_password_does_not_fail(
         fake_credentials, redis_empty
@@ -32,6 +35,7 @@ async def test_set_password_does_not_fail(
 
 
 @pytest.mark.good_input
+@pytest.mark.functional
 @pytest.mark.asyncio
 async def test_set_and_get_password_give_same_results(
         redis_empty, fake_credentials
@@ -46,6 +50,23 @@ async def test_set_and_get_password_give_same_results(
 
 
 @pytest.mark.good_input
+@pytest.mark.integrational
+@pytest.mark.asyncio
+async def test_get_redis_uses_os_variable(mocker: MockFixture):
+    # GIVEN: Redis database URL
+    FAKE_URL = "redis://admin:admin@hosthost.com:9870/"
+    ENV_KEY = "REDISTOGO_URL"
+    mocker.patch.dict(os.environ, {ENV_KEY: FAKE_URL})
+    mock = mocker.AsyncMock()
+    mocker.patch.object(aioredis, 'create_redis_pool', mock)
+    # WHEN: get_redis() is called
+    await get_redis()
+    # THEN: it reads from os.environ.get('REDISTOGO_URL')
+    mock.assert_called_with(FAKE_URL)
+
+
+@pytest.mark.good_input
+@pytest.mark.unit
 @pytest.mark.asyncio
 async def test_closes_connection_after_transaction(redis_empty, close_redis_mock: AsyncMock):
     # GIVEN: empty redis database
@@ -58,29 +79,6 @@ async def test_closes_connection_after_transaction(redis_empty, close_redis_mock
 
 
 @pytest.fixture()
-async def close_redis_mock(mocker: MockFixture):
-    quit_mock = mocker.AsyncMock()
-    # fakeredis does not support 'QUIT', so need to mock it
-    mocker.patch.object(aioredis.Redis, 'quit', quit_mock)
-    return quit_mock
-
-
-@pytest.fixture()
-async def redis_empty(mocker: MockFixture, close_redis_mock):
-    redis = await fakeredis.aioredis.create_redis_pool()
-    yield redis
-    redis.close()
-    await redis.wait_closed()
-
-
-@pytest.fixture()
 async def fake_credentials(redis_empty: aioredis.Redis):
     creds = [(i, str(i) * 10) for i in range(10)]
     yield creds
-
-
-@pytest.fixture()
-async def redis_filled(redis_empty, fake_credentials):
-    for u, p in fake_credentials:
-        await redis_empty.set(u, p)
-    return redis_empty
