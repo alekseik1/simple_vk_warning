@@ -5,11 +5,9 @@ from src.redis_.crud import get_password_from_redis
 from src.keyboards import KEYBOARD_ENTRYPOINT
 from src.settings import TECHNICAL_ADMIN_ID
 from src.commands import GetPasswordCommand
-from src.middlewares import RedisMiddleware
 
 bl = BotBlueprint()
 bl.labeler.auto_rules = [rules.PeerRule(from_chat=False)]
-bl.labeler.message_view.register_middleware(RedisMiddleware)
 
 
 @bl.labeler.message(command=GetPasswordCommand.raw_message_name)
