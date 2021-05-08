@@ -30,6 +30,7 @@ async def print_help(message: Message, **kwargs):
 @bl.labeler.message()
 async def hello_admin(message: Message, **kwargs):
     await message.answer(
-        message='Не очень понял команду. Можешь повторить из списка?',
+        message='Либо я не понял команду, либо у тебя нет на нее прав доступа. '
+                'Можешь повторить еще раз из списка?',
         keyboard=KEYBOARD_ENTRYPOINT
     )
