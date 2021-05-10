@@ -28,4 +28,7 @@ else:
 
 
 bot.labeler.message_view.register_middleware(RedisMiddleware)
-bot.run_forever()
+
+
+if __name__ == '__main__':
+    bot.run_forever()
