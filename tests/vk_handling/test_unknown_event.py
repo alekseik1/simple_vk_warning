@@ -6,6 +6,7 @@ from pytest_mock import MockFixture
 @pytest.mark.parametrize('text', [
     'command fialw', 'фывйцв', 'smtgsh'
 ])
+@pytest.mark.unit
 async def test_goes_to_fallback_on_unknown_message(
         text,
         mocker: MockFixture,
@@ -34,6 +35,7 @@ async def test_goes_to_fallback_on_unknown_message(
 
 
 @pytest.mark.asyncio
+@pytest.mark.unit
 async def test_default_fallback_is_last_in_handlers_list():
     # GIVEN: prepared environment
     # WHEN: bot is build
