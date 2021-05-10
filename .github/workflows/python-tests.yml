@@ -2,7 +2,7 @@ name: test
 
 on:
   push:
-  
+
 jobs:
   test:
 
@@ -10,7 +10,8 @@ jobs:
     strategy:
       matrix:
         # 3.6.8 - CentOS 7; 3.9.5 - Heroku-tested
-        python-version: ['3.6.8', '3.9.5']
+        # NOTE: 3.6.8 by CentOS is NOT supported!
+        python-version: ['3.9.5']
 
     steps:
       - uses: actions/checkout@v2
